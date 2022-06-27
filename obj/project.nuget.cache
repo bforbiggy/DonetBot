@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "dgSpecHash": "cK1vYvFdPGLV9ehLYTwTyFfJ3A02Kjau57Vb36ZjhRN94+T9HQI/pd0VWE3pEhAVRZyUUajaOmH/jW5a35WUGQ==",
+  "success": true,
+  "projectFilePath": "C:\\Repositories\\DonetBot\\DonetBot.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\biggy\\.nuget\\packages\\discord.net\\3.6.1\\discord.net.3.6.1.nupkg.sha512",
+    "C:\\Users\\biggy\\.nuget\\packages\\discord.net.commands\\3.6.1\\discord.net.commands.3.6.1.nupkg.sha512",
+    "C:\\Users\\biggy\\.nuget\\packages\\discord.net.core\\3.6.1\\discord.net.core.3.6.1.nupkg.sha512",
+    "C:\\Users\\biggy\\.nuget\\packages\\discord.net.interactions\\3.6.1\\discord.net.interactions.3.6.1.nupkg.sha512",
+    "C:\\Users\\biggy\\.nuget\\packages\\discord.net.rest\\3.6.1\\discord.net.rest.3.6.1.nupkg.sha512",
+    "C:\\Users\\biggy\\.nuget\\packages\\discord.net.webhook\\3.6.1\\discord.net.webhook.3.6.1.nupkg.sha512",
+    "C:\\Users\\biggy\\.nuget\\packages\\discord.net.websocket\\3.6.1\\discord.net.websocket.3.6.1.nupkg.sha512",
+    "C:\\Users\\biggy\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
+    "C:\\Users\\biggy\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\5.0.0\\microsoft.extensions.dependencyinjection.abstractions.5.0.0.nupkg.sha512",
+    "C:\\Users\\biggy\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
+    "C:\\Users\\biggy\\.nuget\\packages\\openai\\1.2.0\\openai.1.2.0.nupkg.sha512",
+    "C:\\Users\\biggy\\.nuget\\packages\\system.collections.immutable\\5.0.0\\system.collections.immutable.5.0.0.nupkg.sha512",
+    "C:\\Users\\biggy\\.nuget\\packages\\system.interactive.async\\5.0.0\\system.interactive.async.5.0.0.nupkg.sha512",
+    "C:\\Users\\biggy\\.nuget\\packages\\system.linq.async\\5.0.0\\system.linq.async.5.0.0.nupkg.sha512",
+    "C:\\Users\\biggy\\.nuget\\packages\\system.reactive\\5.0.0\\system.reactive.5.0.0.nupkg.sha512",
+    "C:\\Users\\biggy\\.nuget\\packages\\system.valuetuple\\4.5.0\\system.valuetuple.4.5.0.nupkg.sha512",
+    "C:\\Users\\biggy\\.nuget\\packages\\microsoft.netcore.app.host.linux-x64\\6.0.2\\microsoft.netcore.app.host.linux-x64.6.0.2.nupkg.sha512"
+  ],
+  "logs": []
+}
