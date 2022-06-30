@@ -34,9 +34,6 @@ public class AsciiModule : ModuleBase<SocketCommandContext> {
 			FileAttachment imageFile = new FileAttachment(ms, "unknown.txt");
 			await Context.Channel.SendFileAsync(imageFile);
 		}
-
-
-		await ReplyAsync("Converted all attached images to ascii.");
 	}
 
 	[Command("ascii")]
@@ -58,9 +55,6 @@ public class AsciiModule : ModuleBase<SocketCommandContext> {
 		// Reply to message with image
 		FileAttachment imageFile = new FileAttachment(ms, "unknown.txt");
 		await Context.Channel.SendFileAsync(imageFile);
-
-
-		await ReplyAsync("Converted all attached images to ascii.");
 	}
 
 	public MemoryStream modImageStream(Image<Rgba32> img, AsciiArgs args) {
