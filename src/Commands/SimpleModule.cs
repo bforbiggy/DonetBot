@@ -9,4 +9,11 @@ public class SimpleModule : ModuleBase<SocketCommandContext> {
 		Context.Message.DeleteAsync();
 		return ReplyAsync(echo);
 	}
+
+	protected static Random randy = new Random(69420666);
+	[Command("random")]
+	[Summary("Returns an inclusive number between the lower and upper bound.")]
+	public Task SayAsync(int lower, int upper) {
+		return ReplyAsync(randy.Next(lower, upper).ToString());
+	}
 }
