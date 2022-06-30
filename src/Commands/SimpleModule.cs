@@ -17,10 +17,11 @@ public class SimpleModule : ModuleBase<SocketCommandContext> {
 		return ReplyAsync(randy.Next(lower, upper).ToString());
 	}
 
-	[Command("timestamp")]
+	[Command("time")]
 	[Summary("Returns the current unix timestamp")]
 	public Task TimeAsync() {
-		// TODO: Request timestamp from server and request timezone for conversion
-		return ReplyAsync((DateTimeOffset.Now.ToUnixTimeSeconds()).ToString());
+		//TODO: Request time from server, not system time
+		long time = DateTimeOffset.Now.ToUnixTimeSeconds();
+		return ReplyAsync($"<t:{time}>");
 	}
 }
