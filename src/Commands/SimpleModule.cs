@@ -20,8 +20,7 @@ public class SimpleModule : ModuleBase<SocketCommandContext> {
 	[Command("time")]
 	[Summary("Returns the current unix timestamp")]
 	public Task TimeAsync() {
-		//TODO: Request time from server, not system time
-		long time = DateTimeOffset.Now.ToUnixTimeSeconds();
+		long time = Context.Message.Timestamp.ToUnixTimeSeconds();
 		return ReplyAsync($"<t:{time}>");
 	}
 }
