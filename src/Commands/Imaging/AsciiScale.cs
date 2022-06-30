@@ -18,7 +18,7 @@ public class AsciiScale {
 	}
 
 	public static char[,] convertImage(ref Image<Rgba32> img, bool detailed = false) {
-		char[,] text = new char[(int)(img.Height / yInc) + 1, (int)(img.Width / xInc) + 1];
+		char[,] text = new char[(int)Math.Ceiling(img.Height / yInc), (int)Math.Ceiling(img.Width / xInc)];
 
 		img.ProcessPixelRows((accessor) => {
 			for (double y = 0; y < accessor.Height; y += yInc) {
