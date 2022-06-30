@@ -13,7 +13,14 @@ public class SimpleModule : ModuleBase<SocketCommandContext> {
 	protected static Random randy = new Random(69420666);
 	[Command("random")]
 	[Summary("Returns an inclusive number between the lower and upper bound.")]
-	public Task SayAsync(int lower, int upper) {
+	public Task RandomAsync(int lower, int upper) {
 		return ReplyAsync(randy.Next(lower, upper).ToString());
+	}
+
+	[Command("timestamp")]
+	[Summary("Returns the current unix timestamp")]
+	public Task TimeAsync() {
+		// TODO: Request timestamp from server and request timezone for conversion
+		return ReplyAsync((DateTimeOffset.Now.ToUnixTimeSeconds()).ToString());
 	}
 }
