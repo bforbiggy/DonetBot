@@ -35,7 +35,7 @@ public class Bot {
 		// 	return Task.CompletedTask;
 		// };
 
-		// Block this task until the program is closed.
+		// Prevent bot shutdown until program exit
 		await Task.Delay(-1);
 	}
 
