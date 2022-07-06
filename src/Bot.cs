@@ -22,6 +22,7 @@ public class Bot {
 
 		// Enable command service
 		commands = new CommandService();
+		commands.Log += Log;
 		commandHandler = new CommandHandler(client, commands);
 	}
 

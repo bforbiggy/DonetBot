@@ -11,7 +11,8 @@ using System.Text;
 public class AsciiModule : ModuleBase<SocketCommandContext> {
 	[Command("ascii")]
 	[Summary("Converts an image to ascii.")]
-	public async Task AsciiAsync(IUser user, AsciiArgs args = null!) {
+	public async Task AsciiAsync(ulong id, AsciiArgs args = null!) {
+		var user = await Context.Client.GetUserAsync(id);
 		string url = user.GetAvatarUrl(size: 256);
 		await AsciiAsync(url, args);
 	}
@@ -27,7 +28,8 @@ public class AsciiModule : ModuleBase<SocketCommandContext> {
 
 	[Command("ascii")]
 	[Summary("Converts an image to ascii.")]
-	public async Task AsciiAsync(string url, AsciiArgs args = null!) {
+	[Priority(0)]
+	public async Task AsciiAsync(string url, AsciiArgs? args = null) {
 		args = args ?? new AsciiArgs();
 
 		// Retrieve image from stream
