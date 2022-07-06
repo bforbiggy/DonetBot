@@ -31,7 +31,6 @@ public class Bot {
 		await client.StartAsync();
 
 		// Event hooks
-		// NOTHING FOR NOW
 
 		// Block this task until the program is closed.
 		await Task.Delay(-1);
