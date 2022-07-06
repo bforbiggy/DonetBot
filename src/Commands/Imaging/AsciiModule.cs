@@ -2,11 +2,8 @@ namespace DonetBot.Commands;
 
 using Discord;
 using Discord.Commands;
-using DonetBot.config;
 using image_filter_tools;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Advanced;
-using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using System.Text;
@@ -61,17 +58,10 @@ public class AsciiModule : ModuleBase<SocketCommandContext> {
 		// Perform image operations
 		Size size = new Size((int)(img.Width * args.Scale), (int)(img.Height * args.Scale));
 		img.Mutate(accessor => accessor.Resize(size));
-		char[,] text = AsciiScale.convertImage(ref img, args.Detailed);
+		string text = AsciiScale.convertImage(ref img, args.Detailed);
 
-		// Save image to stream
-		StringBuilder sb = new StringBuilder();
-		for (int y = 0; y < text.GetLength(0); y++) {
-			for (int x = 0; x < text.GetLength(1); x++)
-				sb.Append(text[y, x]);
-			sb.AppendLine();
-		}
-
-		return new MemoryStream(ASCIIEncoding.Default.GetBytes(sb.ToString()));
+		// Write output to memory stream
+		return new MemoryStream(ASCIIEncoding.Default.GetBytes(text));
 	}
 }
 
