@@ -11,16 +11,16 @@ using System.Text;
 public class AsciiModule : ModuleBase<SocketCommandContext> {
 	[Command("ascii")]
 	[Summary("Converts an image to ascii.")]
-	public async Task AsciiAsync(AsciiArgs? args = null) {
+	public async Task AsciiAsync(ImageArgs? args = null) {
 		// Perform image operations on all attached images
 		foreach (Attachment attachment in Context.Message.Attachments.Where(a => a.ContentType.StartsWith("image/"))) {
-			await ReplyWithMod(attachment.Url, args!);
+			await ReplyWithMod(attachment.Url, args);
 		}
 	}
 
 	[Command("ascii")]
 	[Summary("Converts an image to ascii.")]
-	public async Task AsciiAsync(string target, AsciiArgs? args = null) {
+	public async Task AsciiAsync(string target, ImageArgs? args = null) {
 		string? url = null;
 
 		// Attempts to parse string as user id
@@ -50,8 +50,8 @@ public class AsciiModule : ModuleBase<SocketCommandContext> {
 	/// Retrieves image then performs all operations.
 	/// This then posts the resulting image to the channel.
 	/// </summary>
-	public async Task ReplyWithMod(string url, AsciiArgs args = null!) {
-		args = args ?? new AsciiArgs();
+	public async Task ReplyWithMod(string url, ImageArgs? args = null) {
+		args = args ?? new ImageArgs();
 		Image<Rgba32> img = await ImageUtil.getModImage(url, args); // Gets images with generic operations
 		FileAttachment imageFile = modImageFile(ref img, args); // Converts image to stream with filter-specific operations
 
@@ -59,8 +59,9 @@ public class AsciiModule : ModuleBase<SocketCommandContext> {
 		await Context.Channel.SendFileAsync(imageFile);
 	}
 
-	private static FileAttachment modImageFile(ref Image<Rgba32> img, AsciiArgs args) {
+	private static FileAttachment modImageFile(ref Image<Rgba32> img, ImageArgs args) {
 		// Perform ascii specific image operations
+		args.Name = System.IO.Path.ChangeExtension(args.Name, ".txt");
 		string text = AsciiScale.convertImage(ref img, args.Detailed);
 
 		// Convert img to file attachment
@@ -68,14 +69,4 @@ public class AsciiModule : ModuleBase<SocketCommandContext> {
 		FileAttachment imageFile = new FileAttachment(ms, args.Name);
 		return imageFile;
 	}
-}
-
-
-// Ascii specific options
-[NamedArgumentType]
-public class AsciiArgs : ImageArgs {
-	public override double Scale { get; set; } = 1.0;
-	public override string Name { get; set; } = "unknown.txt";
-
-	public bool Detailed { get; set; } = false;
 }

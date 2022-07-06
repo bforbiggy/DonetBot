@@ -4,4 +4,5 @@ using Discord.Commands;
 public class ImageArgs {
 	public virtual double Scale { get; set; } = 1.0;
 	public virtual string Name { get; set; } = "unknown.png";
+	public virtual bool Detailed { get; set; } = false;
 }
