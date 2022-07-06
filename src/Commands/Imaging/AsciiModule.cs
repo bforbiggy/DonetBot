@@ -11,52 +11,71 @@ using System.Text;
 public class AsciiModule : ModuleBase<SocketCommandContext> {
 	[Command("ascii")]
 	[Summary("Converts an image to ascii.")]
-	public async Task AsciiAsync(ulong id, AsciiArgs args = null!) {
-		var user = await Context.Client.GetUserAsync(id);
-		string url = user.GetAvatarUrl(size: 256);
-		await AsciiAsync(url, args);
-	}
-
-	[Command("ascii")]
-	[Summary("Converts an image to ascii.")]
-	public async Task AsciiAsync(AsciiArgs args = null!) {
+	public async Task AsciiAsync(AsciiArgs? args = null) {
 		// Perform image operations on all attached images
 		foreach (Attachment attachment in Context.Message.Attachments.Where(a => a.ContentType.StartsWith("image/"))) {
-			await AsciiAsync(attachment.Url, args);
+			await ReplyWithMod(attachment.Url, args!);
 		}
 	}
 
 	[Command("ascii")]
 	[Summary("Converts an image to ascii.")]
-	[Priority(0)]
-	public async Task AsciiAsync(string url, AsciiArgs? args = null) {
+	public async Task AsciiAsync(string target, AsciiArgs? args = null) {
+		string? url = null;
+
+		// Attempts to parse string as user id
+		UInt64 userId = MentionUtils.TryParseUser(target, out userId) ? userId :
+										UInt64.TryParse(target, out userId) ? userId : 0;
+
+		// If string is an id, get avatar url
+		if (userId != 0) {
+			var user = await Context.Client.GetUserAsync(userId);
+			url = user.GetAvatarUrl(size: 256);
+		}
+		// If string is not an id, it must be an url
+		else if (Uri.IsWellFormedUriString(target, UriKind.Absolute)) {
+			url = target;
+		}
+
+		// If no target user or image is found, notify user of error
+		if (url == null) {
+			await Context.Message.ReplyAsync("Could not find target user/image.");
+			return;
+		}
+
+		await ReplyWithMod(url, args);
+	}
+
+	/// <summary>
+	/// Retrieves image then performs all operations.
+	/// This then posts the resulting image to the channel.
+	/// </summary>
+	public async Task ReplyWithMod(string url, AsciiArgs args = null!) {
 		args = args ?? new AsciiArgs();
+		Image<Rgba32> img = await ImageUtil.getModImage(url, args); // Gets images with generic operations
+		FileAttachment imageFile = modImageFile(ref img, args); // Converts image to stream with filter-specific operations
 
-		// Retrieve image from stream
-		Stream s = await new HttpClient().GetStreamAsync(url);
-		Image<Rgba32> img = SixLabors.ImageSharp.Image.Load<Rgba32>(s);
-
-		// Modify image and convert to stream
-		MemoryStream ms = modImageStream(img, args);
-
-		// Reply to message with image
-		FileAttachment imageFile = new FileAttachment(ms, "unknown.txt");
+		// Send the outputted image file
 		await Context.Channel.SendFileAsync(imageFile);
 	}
 
-	public MemoryStream modImageStream(Image<Rgba32> img, AsciiArgs args) {
-		// Perform image operations
-		Size size = new Size((int)(img.Width * args.Scale), (int)(img.Height * args.Scale));
-		img.Mutate(accessor => accessor.Resize(size));
+	private static FileAttachment modImageFile(ref Image<Rgba32> img, AsciiArgs args) {
+		// Perform ascii specific image operations
 		string text = AsciiScale.convertImage(ref img, args.Detailed);
 
-		// Write output to memory stream
-		return new MemoryStream(ASCIIEncoding.Default.GetBytes(text));
+		// Convert img to file attachment
+		MemoryStream ms = new MemoryStream(ASCIIEncoding.Default.GetBytes(text));
+		FileAttachment imageFile = new FileAttachment(ms, args.Name);
+		return imageFile;
 	}
 }
 
+
+// Ascii specific options
 [NamedArgumentType]
-public class AsciiArgs {
-	public double Scale { get; set; } = 1.0;
+public class AsciiArgs : ImageArgs {
+	public override double Scale { get; set; } = 1.0;
+	public override string Name { get; set; } = "unknown.txt";
+
 	public bool Detailed { get; set; } = false;
 }
