@@ -6,7 +6,7 @@ public class SimpleModule : ModuleBase<SocketCommandContext> {
 	[Command("say")]
 	[Summary("Repeats your message.")]
 	public async Task SayAsync([Remainder][Summary("The text to repeat")] string echo) {
-		await Context.Message.DeleteAsync();
+		_ = Context.Message.DeleteAsync();
 		await ReplyAsync(echo);
 	}
 
