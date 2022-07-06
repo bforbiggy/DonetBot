@@ -11,37 +11,25 @@ using System.Text;
 public class AsciiModule : ModuleBase<SocketCommandContext> {
 	[Command("ascii")]
 	[Summary("Converts an image to ascii.")]
-	public async Task AsciiAsync() {
-		await AsciiAsync(new AsciiArgs());
+	public async Task AsciiAsync(IUser user, AsciiArgs args = null!) {
+		string url = user.GetAvatarUrl(size: 256);
+		await AsciiAsync(url, args);
 	}
 
 	[Command("ascii")]
 	[Summary("Converts an image to ascii.")]
-	public async Task AsciiAsync(AsciiArgs args) {
+	public async Task AsciiAsync(AsciiArgs args = null!) {
 		// Perform image operations on all attached images
 		foreach (Attachment attachment in Context.Message.Attachments.Where(a => a.ContentType.StartsWith("image/"))) {
-			// Retrieve image from stream
-			Stream s = await new HttpClient().GetStreamAsync(attachment.Url);
-			Image<Rgba32> img = SixLabors.ImageSharp.Image.Load<Rgba32>(s);
-
-			// Modify image and convert to stream
-			MemoryStream ms = modImageStream(img, args);
-
-			// Reply to message with image
-			FileAttachment imageFile = new FileAttachment(ms, "unknown.txt");
-			await Context.Channel.SendFileAsync(imageFile);
+			await AsciiAsync(attachment.Url, args);
 		}
 	}
 
 	[Command("ascii")]
 	[Summary("Converts an image to ascii.")]
-	public async Task AsciiAsync(string url) {
-		await AsciiAsync(url, new AsciiArgs());
-	}
+	public async Task AsciiAsync(string url, AsciiArgs args = null!) {
+		args = args ?? new AsciiArgs();
 
-	[Command("ascii")]
-	[Summary("Converts an image to ascii.")]
-	public async Task AsciiAsync(string url, AsciiArgs args) {
 		// Retrieve image from stream
 		Stream s = await new HttpClient().GetStreamAsync(url);
 		Image<Rgba32> img = SixLabors.ImageSharp.Image.Load<Rgba32>(s);
