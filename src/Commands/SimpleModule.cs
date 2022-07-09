@@ -12,7 +12,7 @@ public class SimpleModule : ModuleBase<SocketCommandContext> {
 
 	protected static Random randy = new Random(69420666);
 	[Command("random")]
-	[Summary("Returns an random number within bounds. (inclusive)")]
+	[Summary("Returns an random number within bounds. (exclusive upper bound)")]
 	public async Task RandomAsync(int upper) {
 		await ReplyAsync(randy.Next(upper).ToString());
 	}
