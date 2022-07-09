@@ -26,9 +26,6 @@ public class CommandHandler {
 		client.MessageReceived += HandleCommandAsync;
 
 		// Load all modules in the command service
-		// await commands.AddModuleAsync(typeof(SimpleModule), null);
-		// await commands.AddModuleAsync(typeof(GPTModule), null);
-		// await commands.AddModuleAsync(typeof(ConfigModule), null)
 		await commands.AddModulesAsync(assembly: System.Reflection.Assembly.GetEntryAssembly(), services: null);
 	}
 

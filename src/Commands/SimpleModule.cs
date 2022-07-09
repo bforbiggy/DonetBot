@@ -5,14 +5,20 @@ using Discord.Commands;
 public class SimpleModule : ModuleBase<SocketCommandContext> {
 	[Command("say")]
 	[Summary("Repeats your message.")]
-	public async Task SayAsync([Remainder][Summary("The text to repeat")] string echo) {
+	public async Task SayAsync([Remainder][Summary("The text to repeat")] string repeat) {
 		_ = Context.Message.DeleteAsync();
-		await ReplyAsync(echo);
+		await ReplyAsync(repeat);
 	}
 
 	protected static Random randy = new Random(69420666);
 	[Command("random")]
-	[Summary("Returns an inclusive number between the lower and upper bound.")]
+	[Summary("Returns an random number within bounds. (inclusive)")]
+	public async Task RandomAsync(int upper) {
+		await ReplyAsync(randy.Next(upper).ToString());
+	}
+
+	[Command("random")]
+	[Summary("Returns an random number within bounds. (inclusive)")]
 	public async Task RandomAsync(int lower, int upper) {
 		await ReplyAsync(randy.Next(lower, upper).ToString());
 	}

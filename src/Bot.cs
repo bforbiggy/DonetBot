@@ -4,6 +4,8 @@ using DonetBot.Commands;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Discord.Interactions;
+using Microsoft.VisualBasic;
 
 public class Bot {
 	private String token;
@@ -12,6 +14,9 @@ public class Bot {
 
 	private CommandService commands;
 	private CommandHandler commandHandler;
+
+	private InteractionService interactions;
+	private InteractionHandler interactionHandler;
 
 	public Bot(String token) {
 		this.token = token;
@@ -24,6 +29,11 @@ public class Bot {
 		commands = new CommandService();
 		commands.Log += Log;
 		commandHandler = new CommandHandler(client, commands);
+
+		// Enable interaction service
+		interactions = new InteractionService(client);
+		interactions.Log += Log;
+		interactionHandler = new InteractionHandler(client, interactions);
 	}
 
 	public async Task run() {
