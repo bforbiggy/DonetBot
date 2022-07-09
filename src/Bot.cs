@@ -1,39 +1,44 @@
 namespace DonetBot;
 
+using DotNetEnv;
 using DonetBot.Commands;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Discord.Interactions;
-using Microsoft.VisualBasic;
+using Fergun.Interactive;
+using Microsoft.Extensions.DependencyInjection;
 
 public class Bot {
 	private String token;
 
 	private DiscordSocketClient client;
+	private CommandService commandService;
+	private InteractionService interactionService;
 
-	private CommandService commands;
-	private CommandHandler commandHandler;
-
-	private InteractionService interactions;
-	private InteractionHandler interactionHandler;
+	private ServiceProvider services = new ServiceCollection()
+				.AddSingleton(new DiscordSocketConfig { LogLevel = LogSeverity.Verbose })
+				.AddSingleton(new CommandServiceConfig { LogLevel = LogSeverity.Verbose })
+				.AddSingleton<DiscordSocketClient>()
+				.AddSingleton<CommandService>()
+				.AddSingleton<CommandHandler>()
+				.AddSingleton<InteractionService>()
+				.AddSingleton<InteractiveService>()
+				.AddSingleton<InteractionHandler>()
+				.BuildServiceProvider();
 
 	public Bot(String token) {
 		this.token = token;
 
-		// Enable client + logging
-		client = new DiscordSocketClient();
+		// Retrieve specific services
+		client = services.GetRequiredService<DiscordSocketClient>();
+		commandService = services.GetRequiredService<CommandService>();
+		interactionService = services.GetRequiredService<InteractionService>();
+
+		// Enable logging
 		client.Log += Log;
-
-		// Enable command service
-		commands = new CommandService();
-		commands.Log += Log;
-		commandHandler = new CommandHandler(client, commands);
-
-		// Enable interaction service
-		interactions = new InteractionService(client);
-		interactions.Log += Log;
-		interactionHandler = new InteractionHandler(client, interactions);
+		commandService.Log += Log;
+		interactionService.Log += Log;
 	}
 
 	public async Task run() {
@@ -41,17 +46,27 @@ public class Bot {
 		await client.LoginAsync(TokenType.Bot, token);
 		await client.StartAsync();
 
+		// Initialize interaction/command handlers
+		await services.GetRequiredService<CommandHandler>().InstallCommandsAsync();
+		services.GetRequiredService<InteractionHandler>().InstallCommandsAsync();
+
 		// Event hooks
 		// client.MessageReceived += (msg) => {
 		// 	return Task.CompletedTask;
 		// };
 
 		// Prevent bot shutdown until program exit
-		await Task.Delay(-1);
+		await Task.Delay(Timeout.Infinite);
 	}
 
 	private Task Log(LogMessage msg) {
 		Console.WriteLine(msg.ToString());
 		return Task.CompletedTask;
+	}
+
+	public static Task Main(string[] args) {
+		Env.Load();
+		Bot bot = new Bot(Env.GetString("TOKEN"));
+		return bot.run();
 	}
 }

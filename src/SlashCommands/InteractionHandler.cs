@@ -1,19 +1,22 @@
 using Discord;
-using Discord.Interactions;
-using Discord.Net;
+using Discord.Commands;
 using Discord.WebSocket;
+using Discord.Interactions;
+using Fergun.Interactive;
+using Microsoft.Extensions.DependencyInjection;
 public class InteractionHandler {
-	private readonly DiscordSocketClient client;
-	private readonly InteractionService interactions;
+	public readonly DiscordSocketClient client;
+	public readonly InteractionService interactions;
+	private readonly IServiceProvider services;
 
-	public InteractionHandler(DiscordSocketClient client, InteractionService interactions) {
-		this.client = client;
-		this.interactions = interactions;
 
-		InstallCommandsAsync();
+	public InteractionHandler(IServiceProvider services) {
+		this.services = services;
+		this.client = services.GetRequiredService<DiscordSocketClient>();
+		this.interactions = services.GetRequiredService<InteractionService>();
 	}
 
-	private void InstallCommandsAsync() {
+	public void InstallCommandsAsync() {
 		// Add interaction modules
 		client.Ready += async () => {
 			await interactions.AddModulesAsync(assembly: System.Reflection.Assembly.GetEntryAssembly(), services: null);

@@ -4,21 +4,23 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using DonetBot.config;
+using Microsoft.Extensions.DependencyInjection;
 
 public class CommandHandler {
 	private const char COMMAND_PREFIX = '!';
 
 	private readonly DiscordSocketClient client;
 	private readonly CommandService commands;
+	private readonly IServiceProvider services;
+
 
 	public static Dictionary<ulong, GuildSettings> guildsSettings = new Dictionary<ulong, GuildSettings>();
 
 	// Retrieve client and CommandService instance via ctor
-	public CommandHandler(DiscordSocketClient client, CommandService commands) {
-		this.commands = commands;
-		this.client = client;
-
-		_ = InstallCommandsAsync();
+	public CommandHandler(IServiceProvider services) {
+		this.services = services;
+		this.commands = services.GetRequiredService<CommandService>();
+		this.client = services.GetRequiredService<DiscordSocketClient>();
 	}
 
 	public async Task InstallCommandsAsync() {
