@@ -28,7 +28,7 @@ public class CommandHandler {
 		client.MessageReceived += HandleCommandAsync;
 
 		// Load all modules in the command service
-		await commands.AddModulesAsync(assembly: System.Reflection.Assembly.GetEntryAssembly(), services: null);
+		await commands.AddModulesAsync(assembly: System.Reflection.Assembly.GetEntryAssembly(), services: services);
 	}
 
 	private async Task HandleCommandAsync(SocketMessage messageParam) {

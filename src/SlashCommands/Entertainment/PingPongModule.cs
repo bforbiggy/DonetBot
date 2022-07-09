@@ -6,6 +6,7 @@ using Fergun.Interactive;
 
 public class PingPongModule : InteractionModuleBase {
 	private static Random randy = new Random();
+	public InteractiveService? Interactive { get; set; }
 
 	int score = 0;
 	PPStatus status = PPStatus.PONG;
@@ -20,20 +21,18 @@ public class PingPongModule : InteractionModuleBase {
 		var msg = await GetOriginalResponseAsync();
 
 		do {
-			SocketInteraction interaction = await InteractionUtility.WaitForInteractionAsync((BaseSocketClient)Context.Client, TimeSpan.FromSeconds(3), (ctx) => {
-				return userId == ctx.User.Id;
-			});
-
+			var press = await Interactive.NextMessageComponentAsync(ctx => ctx.Message.Id == msg.Id, timeout: TimeSpan.FromSeconds(3));
 
 			// If interaction is null, the user dies due to being too slow
-			if (interaction == null) {
+			if (press.IsTimeout) {
 				await msg.ModifyAsync((msg) => {
 					msg.Content = $"slow ass mf\nScore:{score}";
 					msg.Components = null;
 				});
 				break;
 			}
-			await interaction.DeferAsync();
+			SocketMessageComponent result = press.Value!;
+			await result.DeferAsync();
 
 
 			// Otherwise, check if a bomb was hit
@@ -58,7 +57,7 @@ public class PingPongModule : InteractionModuleBase {
 				await Task.Delay(2 * 1000);
 
 				// Load next bot serve & update status
-				status = await loadNext(interaction);
+				status = await loadNext(result);
 			}
 
 		} while (true);

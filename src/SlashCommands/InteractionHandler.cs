@@ -19,7 +19,7 @@ public class InteractionHandler {
 	public void InstallCommandsAsync() {
 		// Add interaction modules
 		client.Ready += async () => {
-			await interactions.AddModulesAsync(assembly: System.Reflection.Assembly.GetEntryAssembly(), services: null);
+			await interactions.AddModulesAsync(assembly: System.Reflection.Assembly.GetEntryAssembly(), services: services);
 			await interactions.RegisterCommandsToGuildAsync(933828271798370314);
 		};
 
