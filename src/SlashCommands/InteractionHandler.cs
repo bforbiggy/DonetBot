@@ -26,7 +26,7 @@ public class InteractionHandler {
 		};
 
 		client.ButtonExecuted += async (interaction) => {
-			var ctx = new SocketInteractionContext(client, interaction);
+			var ctx = new SocketInteractionContext<SocketMessageComponent>(client, interaction);
 			await interactions.ExecuteCommandAsync(ctx, null);
 		};
 	}
