@@ -25,12 +25,12 @@ public class InteractionHandler {
 
 		client.SlashCommandExecuted += async (interaction) => {
 			var ctx = new SocketInteractionContext(client, interaction);
-			await interactions.ExecuteCommandAsync(ctx, null);
+			await interactions.ExecuteCommandAsync(ctx, services);
 		};
 
 		client.ButtonExecuted += async (interaction) => {
 			var ctx = new SocketInteractionContext<SocketMessageComponent>(client, interaction);
-			await interactions.ExecuteCommandAsync(ctx, null);
+			await interactions.ExecuteCommandAsync(ctx, services);
 		};
 	}
 }

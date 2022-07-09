@@ -6,7 +6,7 @@ using Fergun.Interactive;
 
 public class PingPongModule : InteractionModuleBase {
 	private static Random randy = new Random();
-	public InteractiveService? Interactive { get; set; }
+	public InteractiveService Interactive { get; set; } = null!;
 
 	int score = 0;
 	PPStatus status = PPStatus.PONG;
@@ -18,30 +18,30 @@ public class PingPongModule : InteractionModuleBase {
 		var cb = new ComponentBuilder()
 			.WithButton(emote: new Emoji("🏓"), customId: "returnpingpong");
 		await RespondAsync($"{enumToString(status)}", components: cb.Build());
-		var msg = await GetOriginalResponseAsync();
+		var originalMsg = await GetOriginalResponseAsync();
 
 		do {
-			var press = await Interactive.NextMessageComponentAsync(ctx => ctx.Message.Id == msg.Id, timeout: TimeSpan.FromSeconds(3));
+			var press = await Interactive.NextMessageComponentAsync(ctx => ctx.Message.Id == originalMsg.Id, timeout: TimeSpan.FromSeconds(3));
+
 
 			// If interaction is null, the user dies due to being too slow
 			if (press.IsTimeout) {
-				await msg.ModifyAsync((msg) => {
+				await ModifyOriginalResponseAsync((msg) => {
 					msg.Content = $"slow ass mf\nScore:{score}";
-					msg.Components = null;
+					msg.Components = new ComponentBuilder().Build();
 				});
 				break;
 			}
+
 			SocketMessageComponent result = press.Value!;
 			await result.DeferAsync();
 
-
 			// Otherwise, check if a bomb was hit
 			if (status == PPStatus.BOMB) {
-				await msg.ModifyAsync((msg) => {
+				await ModifyOriginalResponseAsync((msg) => {
 					msg.Content = $"SOMEONE TOOK AN L!??!?!\nScore:{score}";
-					msg.Components = null;
+					msg.Components = new ComponentBuilder().Build();
 				});
-
 				break;
 			}
 			// Otherwise, check if a pong was hit
