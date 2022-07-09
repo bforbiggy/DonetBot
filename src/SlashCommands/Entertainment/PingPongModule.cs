@@ -2,15 +2,17 @@ using Discord;
 using Discord.Commands.Builders;
 using Discord.Interactions;
 using Discord.WebSocket;
+using Fergun.Interactive;
 
 public class PingPongModule : InteractionModuleBase {
 	private static Random randy = new Random();
 
+	int score = 0;
+	PPStatus status = PPStatus.PONG;
+
 	[SlashCommand("pingpong", "Play ball mf")]
 	public async Task PingPongHandler() {
 		// Generate game
-		int score = 0;
-		PPStatus status = PPStatus.PONG;
 		ulong userId = Context.User.Id;
 		var cb = new ComponentBuilder()
 			.WithButton(emote: new Emoji("🏓"), customId: "returnpingpong");

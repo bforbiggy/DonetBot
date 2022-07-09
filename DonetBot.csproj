@@ -11,6 +11,8 @@
     <PackageReference Include="OpenAI" Version="1.2.0"/>
     <PackageReference Include="sixlabors.imagesharp" Version="2.1.3"/>
     <PackageReference Include="dotnetenv" Version="*"/>
+    <PackageReference Include="fergun.interactive" Version="*"/>
+    <PackageReference Include="microsoft.extensions.dependencyinjection" Version="*"/>
     <Reference Include="image-filter-tools">
       <HintPath>image-filter-tools.dll</HintPath>
     </Reference>
