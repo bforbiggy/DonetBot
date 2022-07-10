@@ -3,6 +3,8 @@ using Discord.Interactions;
 using Discord.WebSocket;
 
 public class SimpleModule : InteractionModuleBase {
+	private static Random randy = new Random();
+
 	[SlashCommand("echo", "Testing slash command")]
 	public async Task echo(string input) {
 		await RespondAsync(input);
@@ -22,5 +24,12 @@ public class SimpleModule : InteractionModuleBase {
 			msg.Content = "Get booped retard";
 			msg.Components = null;
 		});
+	}
+
+	private static string[] biggyQuoteList = File.ReadAllLines("res/biggyquotes.txt");
+	[SlashCommand("biggyquotes", "Crazy biggy quotes?!?!")]
+	public async Task biggyQuote() {
+		int index = randy.Next(biggyQuoteList.Length);
+		await RespondAsync(biggyQuoteList[index]);
 	}
 }

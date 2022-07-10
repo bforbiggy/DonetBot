@@ -3,13 +3,16 @@ using Discord.Commands.Builders;
 using Discord.Interactions;
 using Discord.WebSocket;
 using Fergun.Interactive;
+using Sprache;
 
 public class PingPongModule : InteractionModuleBase {
 	private static Random randy = new Random();
 	public InteractiveService Interactive { get; set; } = null!;
 
 	int score = 0;
+	double timer = 3;
 	PPStatus status = PPStatus.PONG;
+
 
 	[SlashCommand("pingpong", "Play ball mf")]
 	public async Task PingPongHandler() {
@@ -21,64 +24,71 @@ public class PingPongModule : InteractionModuleBase {
 		var originalMsg = await GetOriginalResponseAsync();
 
 		do {
-			var press = await Interactive.NextMessageComponentAsync(ctx => ctx.Message.Id == originalMsg.Id, timeout: TimeSpan.FromSeconds(3));
+			// Waits for user interaction
+			var press = await Interactive.NextMessageComponentAsync(ctx => ctx.Message.Id == originalMsg.Id, timeout: TimeSpan.FromSeconds(timer));
 
-
-			// If interaction is null, the user dies due to being too slow
+			// If timer runs out, we determine outcome based on status
 			if (press.IsTimeout) {
-				await ModifyOriginalResponseAsync((msg) => {
-					msg.Content = $"slow ass mf\nScore:{score}";
-					msg.Components = new ComponentBuilder().Build();
-				});
-				break;
+				// If it's a pong timeout, we create an afk lose
+				if (status == PPStatus.PONG) {
+					await ModifyOriginalResponseAsync((msg) => {
+						msg.Content = $"slow ass mf\nScore:{score}";
+						msg.Components = new ComponentBuilder().Build();
+					});
+					break;
+				}
+				// If it's a bomb timeout, generate next serve
+				else if (status == PPStatus.BOMB) {
+					await loadNext();
+					continue;
+				}
 			}
 
-			SocketMessageComponent result = press.Value!;
-			await result.DeferAsync();
+			// When button is pressed, determine outcome based on status
+			if (press.IsSuccess) {
+				// Acknowledge the interaction
+				SocketMessageComponent result = press.Value;
+				await result.DeferAsync();
 
-			// Otherwise, check if a bomb was hit
-			if (status == PPStatus.BOMB) {
-				await ModifyOriginalResponseAsync((msg) => {
-					msg.Content = $"SOMEONE TOOK AN L!??!?!\nScore:{score}";
-					msg.Components = new ComponentBuilder().Build();
-				});
-				break;
+				// If a pong was hit, serve next pong
+				if (status == PPStatus.PONG) {
+					score++;
+					await loadNext();
+				}
+				// If a bomb was hit, lose the game
+				else if (status == PPStatus.BOMB) {
+					await ModifyOriginalResponseAsync((msg) => {
+						msg.Content = $"SOMEONE TOOK AN L!??!?!\nScore:{score}";
+						msg.Components = new ComponentBuilder().Build();
+					});
+					break;
+				}
 			}
-			// Otherwise, check if a pong was hit
-			else if (status == PPStatus.PONG) {
-				// Register hit and increase score
-				score++;
-
-				// Reset to waiting for next hit
-				status = PPStatus.WAITING;
-				await ModifyOriginalResponseAsync((msg) => {
-					msg.Content = $"{enumToString(status)}";
-				});
-				await Task.Delay(2 * 1000);
-
-				// Load next bot serve & update status
-				status = await loadNext(result);
-			}
-
 		} while (true);
 	}
 
-	private async Task<PPStatus> loadNext(SocketInteraction interaction) {
-		PPStatus status;
-		if (randy.Next(10) <= 2) {
+	private async Task loadNext() {
+		// Reset to waiting for next hit
+		status = PPStatus.WAITING;
+		await ModifyOriginalResponseAsync((msg) => {
+			msg.Content = $"{enumToString(status)}";
+		});
+		await Task.Delay(2 * 1000);
+
+		// Generate pong serve
+		if (randy.Next(10) <= 5) {
 			status = PPStatus.PONG;
 			await ModifyOriginalResponseAsync((msg) => {
 				msg.Content = $"{enumToString(status)}";
 			});
 		}
+		// Generate bomb
 		else {
 			status = PPStatus.BOMB;
 			await ModifyOriginalResponseAsync((msg) => {
 				msg.Content = $"{enumToString(status)}";
 			});
 		}
-
-		return status;
 	}
 
 	private static string enumToString(PPStatus status) {
