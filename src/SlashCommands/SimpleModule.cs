@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
@@ -20,9 +21,28 @@ public class SimpleModule : InteractionModuleBase {
 	[ComponentInteraction("boop")]
 	public async Task buttonBoop() {
 		var ctx = (SocketInteractionContext<SocketMessageComponent>)Context;
+
+
+		// Special kahoko case
+		if (ctx.User.Id == 881128002497421352) {
+			await ctx.Interaction.UpdateAsync((msg) => {
+				msg.Content = "uwaaah~~ please bully me kahoko 🥵";
+				msg.Components = new ComponentBuilder().Build();
+			});
+			return;
+		}
+		// Special liv case
+		else if (ctx.User.Id == 870651943717044254) {
+			await ctx.Interaction.UpdateAsync((msg) => {
+				msg.Content = "Liv is an emotional manipulative bitch!";
+				msg.Components = new ComponentBuilder().Build();
+			});
+			return;
+		}
+
 		await ctx.Interaction.UpdateAsync((msg) => {
 			msg.Content = "Get booped retard";
-			msg.Components = null;
+			msg.Components = new ComponentBuilder().Build();
 		});
 	}
 
