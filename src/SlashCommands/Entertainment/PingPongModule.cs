@@ -9,15 +9,21 @@ public class PingPongModule : InteractionModuleBase {
 	private static Random randy = new Random();
 	public InteractiveService Interactive { get; set; } = null!;
 
+	// Game data
 	int score = 0;
-	double timer = 3;
 	PPStatus status = PPStatus.PONG;
+
+	// Timer  values
+	double timer;
+	double afkLossTimer = 3;
+	double bombSafeTimer = 3;
+	double waitTimer = 1.3;
 
 
 	[SlashCommand("pingpong", "Play ball mf")]
 	public async Task PingPongHandler() {
 		// Generate game
-		ulong userId = Context.User.Id;
+		timer = afkLossTimer;
 		var cb = new ComponentBuilder()
 			.WithButton(emote: new Emoji("🏓"), customId: "returnpingpong");
 		await RespondAsync($"{enumToString(status)}", components: cb.Build());
@@ -25,7 +31,9 @@ public class PingPongModule : InteractionModuleBase {
 
 		do {
 			// Waits for user interaction
-			var press = await Interactive.NextMessageComponentAsync(ctx => ctx.Message.Id == originalMsg.Id, timeout: TimeSpan.FromSeconds(timer));
+			var press = await Interactive.NextMessageComponentAsync(ctx => {
+				return ctx.Message.Id == originalMsg.Id && ctx.Message.Author.Id == originalMsg.Author.Id;
+			}, timeout: TimeSpan.FromSeconds(timer));
 
 			// If timer runs out, we determine outcome based on status
 			if (press.IsTimeout) {
@@ -53,6 +61,7 @@ public class PingPongModule : InteractionModuleBase {
 				// If a pong was hit, serve next pong
 				if (status == PPStatus.PONG) {
 					score++;
+					calculateDifficulty();
 					await loadNext();
 				}
 				// If a bomb was hit, lose the game
@@ -73,14 +82,17 @@ public class PingPongModule : InteractionModuleBase {
 		await ModifyOriginalResponseAsync((msg) => {
 			msg.Content = $"{enumToString(status)}";
 		});
-		await Task.Delay(2 * 1000);
+		int tempTimer = randy.Next((int)(waitTimer * 1000), (int)(waitTimer * 1.5 * 1000));
+		await Task.Delay(tempTimer);
 
 		// Generate pong serve
-		if (randy.Next(10) <= 5) {
+		if (randy.Next(10) <= 8) {
 			status = PPStatus.PONG;
 			await ModifyOriginalResponseAsync((msg) => {
 				msg.Content = $"{enumToString(status)}";
 			});
+			double multiplier = 1 + randy.NextDouble() % 0.3;
+			timer = afkLossTimer;
 		}
 		// Generate bomb
 		else {
@@ -88,7 +100,14 @@ public class PingPongModule : InteractionModuleBase {
 			await ModifyOriginalResponseAsync((msg) => {
 				msg.Content = $"{enumToString(status)}";
 			});
+			timer = bombSafeTimer;
 		}
+	}
+
+	private void calculateDifficulty() {
+		afkLossTimer = 3.0331 + -0.551773 * Math.Log(score); // (1,3) (20, 1.5) (50, 0.7)
+		bombSafeTimer = Math.Max(1, bombSafeTimer - 0.05);
+		waitTimer = Math.Max(0.7, waitTimer - 0.02);
 	}
 
 	private static string enumToString(PPStatus status) {
