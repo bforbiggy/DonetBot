@@ -4,6 +4,8 @@ using Discord.WebSocket;
 using Discord.Interactions;
 using Fergun.Interactive;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
+
 public class InteractionHandler {
 	public readonly DiscordSocketClient client;
 	public readonly InteractionService interactions;
@@ -20,6 +22,7 @@ public class InteractionHandler {
 		// Add interaction modules
 		client.Ready += async () => {
 			await interactions.AddModulesAsync(assembly: System.Reflection.Assembly.GetEntryAssembly(), services: services);
+			await interactions.AddModulesGloballyAsync();
 			await interactions.RegisterCommandsToGuildAsync(933828271798370314);
 		};
 
