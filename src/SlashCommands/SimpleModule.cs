@@ -39,6 +39,14 @@ public class SimpleModule : InteractionModuleBase {
 			});
 			return;
 		}
+		// Special matthew case
+		else if (ctx.User.Id == 302511455175966720) {
+			await ctx.Interaction.UpdateAsync((msg) => {
+				msg.Content = "uwu matthew zamners!";
+				msg.Components = new ComponentBuilder().Build();
+			});
+			return;
+		}
 
 		await ctx.Interaction.UpdateAsync((msg) => {
 			msg.Content = "Get booped retard";
