@@ -12,7 +12,8 @@ public class AsciiModule : InteractionModuleBase
 		[Summary("user", "Choose user's profile picture")] IUser? user = null,
 		[Summary("url", "Link to image")] string? url = null,
 		[Summary("upload", "Upload custom image")] IAttachment? attachment = null,
-		[Summary("scale", "Image size multiplier")] double scale = 1.0)
+		[Summary("scale", "Image size multiplier")] double scale = 1.0,
+		[Summary("detailed", "Use more detailed ascii chars")] bool detailed = false)
 	{
 		Image<Rgba32>?[] images = { await ImageUtil.getImage(user), await ImageUtil.getImage(url), await ImageUtil.getImage(attachment) };
 		LinkedList<FileAttachment> attachments = new LinkedList<FileAttachment>();
@@ -24,7 +25,7 @@ public class AsciiModule : InteractionModuleBase
 			if (images[i] != null)
 			{
 				ImageUtil.resize(ref images[i]!, scale);
-				string text = AsciiScale.convertImage(ref images[i]!);
+				string text = AsciiScale.convertImage(ref images[i]!, detailed);
 				attachments.AddLast(ToAttachment(text));
 			}
 		}
