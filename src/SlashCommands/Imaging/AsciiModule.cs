@@ -5,7 +5,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using System.Text;
 
-public class ImageModule : InteractionModuleBase
+public class AsciiModule : InteractionModuleBase
 {
 	[SlashCommand("ascii", "Converts an image to ascii.")]
 	public async Task AsciiAsync(
@@ -25,7 +25,7 @@ public class ImageModule : InteractionModuleBase
 			{
 				ImageUtil.resize(ref images[i]!, scale);
 				string text = AsciiScale.convertImage(ref images[i]!);
-				attachments.AddLast(ToAttachMent(text));
+				attachments.AddLast(ToAttachment(text));
 			}
 		}
 
@@ -36,7 +36,7 @@ public class ImageModule : InteractionModuleBase
 			await ModifyOriginalResponseAsync(msg => msg.Content = "Maybe add an image next time..");
 	}
 
-	private static FileAttachment ToAttachMent(string imageText, string name = "unknown")
+	private static FileAttachment ToAttachment(string imageText, string name = "unknown")
 	{
 		// Properly set file extension
 		name = System.IO.Path.ChangeExtension(name, ".txt");

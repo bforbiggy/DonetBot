@@ -1,5 +1,6 @@
 using Discord;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
@@ -19,6 +20,18 @@ public class ImageUtil
 			return;
 		Size size = new Size((int)(img.Width * scale), (int)(img.Height * scale));
 		img.Mutate(accessor => accessor.Resize(size));
+	}
+
+	// Converts image to file attachment
+	public static FileAttachment ToAttachment(Image<Rgba32> img, string name = "unknown")
+	{
+		// Properly set file extension
+		name = System.IO.Path.ChangeExtension(name, ".png");
+
+		// Convert img to file attachment
+		MemoryStream ms = new MemoryStream();
+		img.Save(ms, new PngEncoder());
+		return new FileAttachment(ms, name);
 	}
 
 	// Convert id to image
