@@ -18,6 +18,6 @@ public class UtilityModule : InteractionModuleBase
 	public async Task time()
 	{
 		long time = Context.Interaction.CreatedAt.ToUnixTimeSeconds();
-		await ReplyAsync($"<t:{time}>");
+		await RespondAsync($"<t:{time}>");
 	}
 }
