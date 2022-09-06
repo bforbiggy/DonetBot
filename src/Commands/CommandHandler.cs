@@ -40,8 +40,10 @@ public class CommandHandler
 		var message = messageParam as SocketUserMessage;
 		if (message == null || message.Author.IsBot) return;
 
+
 		// Determine if the message is a command based on the prefix and make sure no bots trigger commands
 		int argPos = 0;
+
 		if (!message.HasCharPrefix(COMMAND_PREFIX, ref argPos))
 			return;
 
@@ -53,13 +55,12 @@ public class CommandHandler
 			guildsSettings[guild.Id] = new GuildSettings(guild);
 		}
 
-
 		// Create a WebSocket context from message and 
 		// inject service provider for preconditional check for commands
 		SocketCommandContext context = new SocketCommandContext(client, message);
 		await commands.ExecuteAsync(
 				context: context,
 				argPos: argPos,
-				services: null);
+				services: services);
 	}
 }
