@@ -1,11 +1,18 @@
-using System.ComponentModel;
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
+using MongoDB.Driver;
+using MongoDB.Bson;
 
 public class SimpleModule : InteractionModuleBase
 {
 	private static Random randy = new Random(69420666);
+	private MongoClient mc;
+
+	public SimpleModule(MongoClient mc)
+	{
+		this.mc = mc;
+	}
 
 	[SlashCommand("say", "Repeats what you say")]
 	public async Task echo(string input)
@@ -26,41 +33,19 @@ public class SimpleModule : InteractionModuleBase
 	{
 		var ctx = (SocketInteractionContext<SocketMessageComponent>)Context;
 
+		// Connect to database + collection
+		IMongoDatabase db = mc.GetDatabase("beepboop");
+		IMongoCollection<BsonDocument> quotes = db.GetCollection<BsonDocument>("quotes");
 
-		// Special kahoko case
-		if (ctx.User.Id == 881128002497421352)
-		{
-			await ctx.Interaction.UpdateAsync((msg) =>
-			{
-				msg.Content = "uwaaah~~ please bully me kahoko 🥵";
-				msg.Components = new ComponentBuilder().Build();
-			});
-			return;
-		}
-		// Special liv case
-		else if (ctx.User.Id == 870651943717044254)
-		{
-			await ctx.Interaction.UpdateAsync((msg) =>
-			{
-				msg.Content = "Liv is an emotional manipulative bitch!";
-				msg.Components = new ComponentBuilder().Build();
-			});
-			return;
-		}
-		// Special matthew case
-		else if (ctx.User.Id == 302511455175966720)
-		{
-			await ctx.Interaction.UpdateAsync((msg) =>
-			{
-				msg.Content = "uwu matthew zamners!";
-				msg.Components = new ComponentBuilder().Build();
-			});
-			return;
-		}
+		// Filter for target user
+		FilterDefinition<BsonDocument> filter = Builders<BsonDocument>.Filter.Eq("_id", $"{ctx.User.Id}");
+		BsonDocument custom = quotes.Find(filter).FirstOrDefault();
+
 
 		await ctx.Interaction.UpdateAsync((msg) =>
 		{
-			msg.Content = "Get booped retard";
+			// Send message response or a custom one, if available
+			msg.Content = custom == null ? "Get booped retard" : custom.GetElement("response").Value.ToString();
 			msg.Components = new ComponentBuilder().Build();
 		});
 	}
