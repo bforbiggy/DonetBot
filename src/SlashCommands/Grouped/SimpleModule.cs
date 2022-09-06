@@ -35,7 +35,7 @@ public class SimpleModule : InteractionModuleBase
 
 		// Connect to database + collection
 		IMongoDatabase db = mc.GetDatabase("beepboop");
-		IMongoCollection<BsonDocument> quotes = db.GetCollection<BsonDocument>("quotes");
+		IMongoCollection<BsonDocument> quotes = db.GetCollection<BsonDocument>("mystery");
 
 		// Filter for target user
 		FilterDefinition<BsonDocument> filter = Builders<BsonDocument>.Filter.Eq("_id", $"{ctx.User.Id}");
@@ -50,11 +50,18 @@ public class SimpleModule : InteractionModuleBase
 		});
 	}
 
-	private static string[] biggyQuoteList = File.ReadAllLines("res/biggyquotes.txt");
 	[SlashCommand("biggyquotes", "Crazy biggy quotes?!?!")]
 	public async Task biggyQuote()
 	{
-		int index = randy.Next(biggyQuoteList.Length);
-		await RespondAsync(biggyQuoteList[index]);
+		// Connect to database + collection
+		IMongoDatabase db = mc.GetDatabase("beepboop");
+		IMongoCollection<BsonDocument> quotes = db.GetCollection<BsonDocument>("quotes");
+
+		// Pick random quote from database and respond with it
+		BsonDocument sample = new BsonDocument {
+			{ "$sample", new BsonDocument{{"size", 1}} }
+		};
+		var quote = quotes.Aggregate<BsonDocument>(new BsonDocument[] { sample }).First();
+		await RespondAsync(quote.GetElement("quote").Value.ToString());
 	}
 }
