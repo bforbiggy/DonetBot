@@ -6,7 +6,8 @@ using Discord.WebSocket;
 using DonetBot.config;
 using Microsoft.Extensions.DependencyInjection;
 
-public class CommandHandler {
+public class CommandHandler
+{
 	private const char COMMAND_PREFIX = '!';
 
 	private readonly DiscordSocketClient client;
@@ -17,13 +18,15 @@ public class CommandHandler {
 	public static Dictionary<ulong, GuildSettings> guildsSettings = new Dictionary<ulong, GuildSettings>();
 
 	// Retrieve client and CommandService instance via ctor
-	public CommandHandler(IServiceProvider services) {
+	public CommandHandler(IServiceProvider services)
+	{
 		this.services = services;
 		this.commands = services.GetRequiredService<CommandService>();
 		this.client = services.GetRequiredService<DiscordSocketClient>();
 	}
 
-	public async Task InstallCommandsAsync() {
+	public async Task InstallCommandsAsync()
+	{
 		// Hook the MessageReceived event into our command handler
 		client.MessageReceived += HandleCommandAsync;
 
@@ -31,7 +34,8 @@ public class CommandHandler {
 		await commands.AddModulesAsync(assembly: System.Reflection.Assembly.GetEntryAssembly(), services: services);
 	}
 
-	private async Task HandleCommandAsync(SocketMessage messageParam) {
+	private async Task HandleCommandAsync(SocketMessage messageParam)
+	{
 		// Don't process the command if it was a system or bot message
 		var message = messageParam as SocketUserMessage;
 		if (message == null || message.Author.IsBot) return;
@@ -44,7 +48,8 @@ public class CommandHandler {
 		// Generate default guild permissions if unavailable
 		SocketGuildChannel channel = (SocketGuildChannel)message.Channel;
 		SocketGuild guild = channel!.Guild;
-		if (!guildsSettings.ContainsKey(guild.Id)) {
+		if (!guildsSettings.ContainsKey(guild.Id))
+		{
 			guildsSettings[guild.Id] = new GuildSettings(guild);
 		}
 
