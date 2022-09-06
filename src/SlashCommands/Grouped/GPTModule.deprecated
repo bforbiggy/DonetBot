@@ -28,10 +28,8 @@ public class GPTModule : InteractionModuleBase
 	[SlashCommand("answer", "Provides AI generated answer for any question.")]
 	public async Task AnswerAsync([Summary("question", "User inputted question")] string question)
 	{
-		// Formats user input for GPT-3 completion
-		GuildSettings guildSettings = CommandHandler.guildsSettings[Context.Guild.Id];
 		string formattedQuestion = $"Q: {question}";
-		string requestString = $"{guildSettings.settings["ai.answer.qna"]}\n\n{formattedQuestion}";
+		string requestString = "This is a Q&A for a smart ai.\n\n{formattedQuestion}";
 
 		// Creates GPT-3 request with appropriate parameters
 		CompletionRequest request = new CompletionRequest(requestString, temperature: 0.2);
