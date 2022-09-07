@@ -50,13 +50,12 @@ public class ImageUtil
 		return await streamImage(url);
 	}
 
-	// Convert url to image
+	// Convert attachment url to image
 	public async static Task<Image<Rgba32>?> getImage(IAttachment? attachment = null)
 	{
-		//TODO: Add check for content type
-		if (attachment == null)
+		// Ensure the attachment is actually an image
+		if (attachment == null || attachment.ContentType == null || !attachment.ContentType.StartsWith("image"))
 			return null;
-		Console.WriteLine(attachment.ContentType);
 		return await streamImage(attachment.Url);
 	}
 }
