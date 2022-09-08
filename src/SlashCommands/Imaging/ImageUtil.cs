@@ -39,7 +39,7 @@ public class ImageUtil
 	{
 		if (user == null)
 			return null;
-		return await streamImage(user.GetAvatarUrl(size: 192));
+		return await streamImage(user.GetAvatarUrl(size: 256));
 	}
 
 	// Convert url to image
