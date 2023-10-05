@@ -1,8 +1,5 @@
 .vscode/
-.env
-
-Webhook/
-
 obj/
 bin/
+
 .env
