@@ -21,10 +21,10 @@ public class Bot
 				.AddSingleton(new MongoClient($"mongodb+srv://biggy:{Env.GetString("MONGODB_PASSWORD")}@cluster0.y8656og.mongodb.net/?retryWrites=true&w=majority"))
 				.AddSingleton<DiscordSocketClient>()
 				.AddSingleton<CommandService>()
-				//.AddSingleton<CommandHandler>()
 				.AddSingleton<InteractionService>()
 				.AddSingleton<InteractiveService>()
 				.AddSingleton<InteractionHandler>()
+				//.AddSingleton<CommandHandler>()
 				.BuildServiceProvider();
 
 	public Bot()
