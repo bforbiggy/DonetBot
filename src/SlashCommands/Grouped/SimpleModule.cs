@@ -4,6 +4,7 @@ using Discord.WebSocket;
 using MongoDB.Driver;
 using MongoDB.Bson;
 
+[DefaultMemberPermissions(GuildPermission.UseApplicationCommands)]
 public class SimpleModule : InteractionModuleBase
 {
 	private static Random randy = new Random(69420666);
