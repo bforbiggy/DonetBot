@@ -25,7 +25,7 @@ public class InteractionHandler
 		// Add interaction modules
 		client.Ready += async () =>
 		{
-			await interactions.AddModulesAsync(assembly: System.Reflection.Assembly.GetEntryAssembly(), services: services);
+			await interactions.AddModulesAsync(assembly: Assembly.GetEntryAssembly(), services: services);
 			await interactions.RegisterCommandsGloballyAsync();
 		};
 

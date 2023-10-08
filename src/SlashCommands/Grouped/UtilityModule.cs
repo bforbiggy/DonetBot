@@ -3,6 +3,7 @@ using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 
+[DefaultMemberPermissions(GuildPermission.UseApplicationCommands)]
 public class UtilityModule : InteractionModuleBase
 {
 	private static Random randy = new Random(69420666);
@@ -23,6 +24,7 @@ public class UtilityModule : InteractionModuleBase
 		await RespondAsync($"<t:{time}>");
 	}
 
+	[DefaultMemberPermissions(GuildPermission.UseApplicationCommands)]
 	[SlashCommand("timer", "Sets a timer.")]
 	public async Task timer(
 		int days = 0,
