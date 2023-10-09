@@ -4,5 +4,7 @@ My personal bot for adding whatever features I feel like I actually want and nee
 
 ## Environment setup (.env)
 
+```
 TOKEN=YOURBOTTOKENHERE
 MONGODB_PASSWORD=MONGODBPASSWORDHERE
+```
