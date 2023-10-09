@@ -5,6 +5,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using System.Text;
 
+[DefaultMemberPermissions(GuildPermission.UseApplicationCommands)]
 public class GrayScaleModule : InteractionModuleBase
 {
 	[SlashCommand("grayscale", "Converts an image to ascii.")]
