@@ -1,9 +1,11 @@
 using Discord;
+using Discord.Interactions;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
+[DefaultMemberPermissions(GuildPermission.UseApplicationCommands)]
 public class ImageUtil
 {
 	// Retrieve image from https stream

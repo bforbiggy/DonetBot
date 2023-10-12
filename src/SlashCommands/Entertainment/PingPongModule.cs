@@ -5,7 +5,7 @@ using Discord.WebSocket;
 using Fergun.Interactive;
 using Sprache;
 
-[DefaultMemberPermissions(GuildPermission.UseApplicationCommands | GuildPermission.SendMessages)]
+[DefaultMemberPermissions(GuildPermission.UseApplicationCommands)]
 public class PingPongModule : InteractionModuleBase
 {
 	private static Random randy = new Random();

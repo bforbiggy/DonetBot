@@ -4,5 +4,14 @@ My personal bot for adding whatever features I feel like I actually want and nee
 
 ## Environment setup (.env)
 
+```
 TOKEN=YOURBOTTOKENHERE
 MONGODB_PASSWORD=MONGODBPASSWORDHERE
+```
+
+## Building for production
+
+```
+dotnet build --configuration release
+dotnet publish -r linux-x64 --configuration release
+```

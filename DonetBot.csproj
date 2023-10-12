@@ -15,7 +15,7 @@
     <PackageReference Include="dotnetenv" Version="*"/>
     <PackageReference Include="fergun.interactive" Version="*"/>
     <PackageReference Include="microsoft.extensions.dependencyinjection" Version="*"/>
-    <PackageReference Include="mongodb.driver" Version="2.17.1"/>
+    <PackageReference Include="mongodb.driver" Version="2.19.0"/>
     <Reference Include="image-filter-tools">
       <HintPath>image-filter-tools.dll</HintPath>
     </Reference>
