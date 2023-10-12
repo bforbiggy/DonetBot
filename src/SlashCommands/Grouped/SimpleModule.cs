@@ -7,11 +7,12 @@ using MongoDB.Bson;
 [DefaultMemberPermissions(GuildPermission.UseApplicationCommands)]
 public class SimpleModule : InteractionModuleBase
 {
-	private static Random randy = new Random(69420666);
+	private static Random randy;
 	private MongoClient mc;
 
-	public SimpleModule(MongoClient mc)
+	public SimpleModule(Random randy, MongoClient mc)
 	{
+		this.randy = randy;
 		this.mc = mc;
 	}
 

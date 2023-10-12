@@ -25,6 +25,8 @@ public class Bot
 				.AddSingleton<InteractiveService>()
 				.AddSingleton<InteractionHandler>()
 				//.AddSingleton<CommandHandler>()
+				.AddSingleton<HttpClient>()
+				.AddSingleton<Random>()
 				.BuildServiceProvider();
 
 	public Bot()

@@ -1,8 +1,5 @@
-using Discord;
-using Discord.Commands;
 using Discord.WebSocket;
 using Discord.Interactions;
-using Fergun.Interactive;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
