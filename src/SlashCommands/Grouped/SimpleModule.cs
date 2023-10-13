@@ -7,7 +7,7 @@ using MongoDB.Bson;
 [DefaultMemberPermissions(GuildPermission.UseApplicationCommands)]
 public class SimpleModule : InteractionModuleBase
 {
-	private static Random randy;
+	private Random randy;
 	private MongoClient mc;
 
 	public SimpleModule(Random randy, MongoClient mc)
