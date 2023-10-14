@@ -14,4 +14,8 @@ app.MapPost("/donetbot/github", async context =>
 	await context.Response.WriteAsync("Gotcha baby girl");
 });
 
+app.MapGet("/", async (context) => {
+	await context.Response.WriteAsync("main page");
+});
+
 app.Run();
