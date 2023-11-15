@@ -55,9 +55,11 @@ public class Bot
 		services.GetRequiredService<InteractionHandler>().InstallCommandsAsync();
 
 		// Event hooks
-		// client.MessageReceived += (msg) => {
-		// 	return Task.CompletedTask;
-		// };
+		client.MessageReceived += (msg) =>
+		{
+			Twitter.TwitterAutoEmbed(msg);
+			return Task.CompletedTask;
+		};
 
 		// Prevent bot shutdown until program exit
 		await Task.Delay(Timeout.Infinite);
